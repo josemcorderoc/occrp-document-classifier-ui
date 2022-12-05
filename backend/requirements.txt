@@ -1,0 +1,16 @@
+tensorflow==2.10.0
+tensorflow-io==0.27.0
+imbalanced-learn
+filetype
+matplotlib
+mlflow
+numpy
+pandas
+pdf2image
+pydantic
+pytest
+scikit-learn
+scipy
+tqdm
+typer
+#occrp
