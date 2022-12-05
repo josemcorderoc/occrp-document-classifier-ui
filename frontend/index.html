@@ -16,6 +16,7 @@
         <link href="css/styles.css" rel="stylesheet" />
         <link href="css/custom_styles.css" rel="stylesheet" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
     </head>
     <body>
         <!-- Navigation-->
@@ -73,7 +74,12 @@
                                 <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
                                 
                                 <br>
-                                <div class="col-auto"><input class="btn btn-primary" id="testbutton" type="button" value="Call function"></div>
+                                <div class="col-auto">
+                                    <input class="btn btn-primary" id="showbutton" type="button" value="Show results">
+                                    <input class="btn btn-primary" id="hidebutton" type="button" value="Hide results">
+
+                                </div>
+                                
                                 
 
                             </form>
@@ -136,10 +142,9 @@
                     </div>
 
                     <div class="col-lg-6 order-lg-2 results-stats">
-                        <h2>Your document is a... </h2>
-                        <div class="results-pseudo-class">
-                            Results here
-                        </div>
+                        <h2>Congratulations, your document is a... </h2>
+                        <div class="results-prediction-pseudo" style="color:red; text-align: center"><h3>Bank statement</h3></div>
+                        <div class="results-graph-pseudo"></div>
                         
                     </div>
                 </div>
