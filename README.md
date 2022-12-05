@@ -10,3 +10,16 @@
 - Explain how the prediction is made
 
 - Hosting !
+
+ 
+- AWS
+- Heroku
+- Google Cloud
+- Azure
+- RedHat
+
+- Parameters to compare:
+    - Memory usage (RAM)
+    - Docker image size
+    - Disk usage (only models?)
+    - 
