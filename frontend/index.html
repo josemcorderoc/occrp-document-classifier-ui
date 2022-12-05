@@ -14,15 +14,19 @@
         <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+        <link href="css/custom_styles.css" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     </head>
     <body>
         <!-- Navigation-->
         <nav class="navbar navbar-light bg-light static-top">
             <div class="container">
-                <a class="navbar-brand" href="#!"></a>
-                <a class="btn btn-primary" href="#signup">Go to GitHub repository</a>
+                <!-- <a class="navbar-brand" href="#!"></a> -->
+                <!-- <a class="btn btn-primary" href="https://www.github.com" style="background:url('assets/img/blacktocat.png') #0090ff no-repeat 95% 50%; padding:10px 50px 10px 10px;">View on GitHub</a> -->
+                <a id="forkme_banner" href="https://www.github.com">View on GitHub</a>
             </div>
         </nav>
+
         <!-- Masthead-->
         <header class="masthead">
             <div class="container position-relative">
@@ -32,8 +36,7 @@
                             <!-- Page heading-->
                             <h1 class="mb-5">Document classifier!</h1>
                             <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                                <p class="lead mb-0">This document classifier is really great. It will improve your life enormously. 
-                                    Please recommend us. We need funding 🥺 </p>
+                                <p class="lead mb-0">This document classifier is really great. It will improve your life enormously. Please recommend us. We need funding 🥺 </p>
                             </div>
                             <!-- Signup form-->
                             <!-- * * * * * * * * * * * * * * *-->
@@ -48,7 +51,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <input class="form-control" type="file" id="formFile">
-                                        <label for="formFile" class="form-label">Enter your file here</label>
+                                        <!-- <label for="formFile" class="form-label">Enter your file here</label> -->
                                     </div>
                                     <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Submit</button></div>
                                 </div>
@@ -68,14 +71,34 @@
                                 <!-- This is what your users will see when there is-->
                                 <!-- an error submitting the form-->
                                 <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
+                                
+                                <br>
+                                <div class="col-auto"><input class="btn btn-primary" id="testbutton" type="button" value="Call function"></div>
+                                
+
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="container position-absolute" style="bottom:0; max-width:100%">
+                <div class="row justify-content-end">
+                    <div class="">
+                        <div class="text-end text-white">
+                            <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                                <p class="lead mb-0" style="font-size:0.9em">Background image by Kirsty Pargeter on <a href="https://www.vecteezy.com/vector-art/6954145-low-poly-abstract-design-background" style="color:black">Vecteezy</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </header>
+        
+        
+
         <!-- Icons Grid-->
-        <section class="features-icons bg-light text-center">
+        <!-- <section class="features-icons bg-light text-center">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4">
@@ -101,22 +124,44 @@
                     </div>
                 </div>
             </div>
+        </section> -->
+
+        <!-- Image Results-->
+        <section id="result-section" class="results">
+            <div id="results-template" class="container-fluid p-0" style="display:none">
+                <div class="row g-0">                    
+                    <div class="col-lg-6 order-lg-1 my-auto results-pdf">
+                        <h2 style="text-align: center;">Page 1/1</h2>
+                        <img src="assets/img/pdf-page-1.jpg" class="results-img-page">
+                    </div>
+
+                    <div class="col-lg-6 order-lg-2 results-stats">
+                        <h2>Your document is a... </h2>
+                        <div class="results-pseudo-class">
+                            Results here
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
         </section>
-        <!-- Image Showcases-->
+        
+
+        <!-- Image Info section (Showcase)-->
         <section class="showcase">
             <div class="container-fluid p-0">
                 <div class="row g-0">
                     <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-1.jpg')"></div>
                     <div class="col-lg-6 order-lg-1 my-auto showcase-text">
-                        <h2>Fully Responsive Design</h2>
-                        <p class="lead mb-0">When you use a theme created by Start Bootstrap, you know that the theme will look great on any device, whether it's a phone, tablet, or desktop the page will behave responsively!</p>
+                        <h2>How it works</h2>
+                        <p class="lead mb-0">Magic and machine learning. <br> Please see our paper for more information. </p>
                     </div>
                 </div>
                 <div class="row g-0">
                     <div class="col-lg-6 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-2.jpg')"></div>
                     <div class="col-lg-6 my-auto showcase-text">
-                        <h2>Updated For Bootstrap 5</h2>
-                        <p class="lead mb-0">Newly improved, and full of great utility classes, Bootstrap 5 is leading the way in mobile responsive web development! All of the themes on Start Bootstrap are now using Bootstrap 5!</p>
+                        <h2>Anything else we want to say</h2>
+                        <p class="lead mb-0">KL for life</p>
                     </div>
                 </div>
                 <div class="row g-0">
@@ -128,7 +173,8 @@
                 </div>
             </div>
         </section>
-        <!-- Testimonials-->
+
+        <!-- Made by (Testimonials)-->
         <section class="testimonials text-center bg-light">
             <div class="container">
                 <h2 class="mb-5">Made by...</h2>
@@ -137,78 +183,45 @@
                         <div class="testimonial-item mx-auto mb-5 mb-lg-0">
                             <img class="img-fluid rounded-circle mb-3" src="assets/img/testimonials-1.jpg" alt="..." />
                             <h5>Jose Sanchez</h5>
-                            <p class="font-weight-light mb-0">"This is fantastic! Thanks so much guys!"</p>
+                            <p class="font-weight-light mb-0">"They said there's no job where you can google all the stuff you need"</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="testimonial-item mx-auto mb-5 mb-lg-0">
                             <img class="img-fluid rounded-circle mb-3" src="assets/img/testimonials-2.jpg" alt="..." />
                             <h5>Theresa Henn</h5>
-                            <p class="font-weight-light mb-0">"Bootstrap is amazing. I've been using it to create lots of super nice landing pages."</p>
+                            <p class="font-weight-light mb-0">"You can't be broke if you don't check your bank account"</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="testimonial-item mx-auto mb-5 mb-lg-0">
                             <img class="img-fluid rounded-circle mb-3" src="assets/img/testimonials-3.jpg" alt="..." />
                             <h5>Jose Miguel Cordero</h5>
-                            <p class="font-weight-light mb-0">"Thanks so much for making these free resources available to us!"</p>
+                            <p class="font-weight-light mb-0">"git push --force, <br> problem solved"</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="testimonial-item mx-auto mb-5 mb-lg-0">
                             <img class="img-fluid rounded-circle mb-3" src="assets/img/testimonials-4.jpg" alt="..." />
                             <h5>Frederik Holtel</h5>
-                            <p class="font-weight-light mb-0">"This is fantastic! This is fantastic!"</p>
+                            <p class="font-weight-light mb-0">"100 lines of code, 200 errors"</p>
                         </div>
                     </div>                    
                 </div>
             </div>
         </section>
-        <!-- Call to Action-->
-        <section class="call-to-action text-white text-center" id="signup">
+
+        <!-- Seperator (Call to Action)-->
+        <section class="call-to-action text-white text-center">
             <div class="container position-relative">
                 <div class="row justify-content-center">
                     <div class="col-xl-6">
-                        <h2 class="mb-4">Ready to get started? Sign up now!</h2>
-                        <!-- Signup form-->
-                        <!-- * * * * * * * * * * * * * * *-->
-                        <!-- * * SB Forms Contact Form * *-->
-                        <!-- * * * * * * * * * * * * * * *-->
-                        <!-- This form is pre-integrated with SB Forms.-->
-                        <!-- To make this form functional, sign up at-->
-                        <!-- https://startbootstrap.com/solution/contact-forms-->
-                        <!-- to get an API token!-->
-                        <form class="form-subscribe" id="contactFormFooter" data-sb-form-api-token="API_TOKEN">
-                            <!-- Email address input-->
-                            <div class="row">
-                                <div class="col">
-                                    <input class="form-control form-control-lg" id="emailAddressBelow" type="email" placeholder="Email Address" data-sb-validations="required,email" />
-                                    <div class="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:required">Email Address is required.</div>
-                                    <div class="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:email">Email Address Email is not valid.</div>
-                                </div>
-                                <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Submit</button></div>
-                            </div>
-                            <!-- Submit success message-->
-                            <!---->
-                            <!-- This is what your users will see when the form-->
-                            <!-- has successfully submitted-->
-                            <div class="d-none" id="submitSuccessMessage">
-                                <div class="text-center mb-3">
-                                    <div class="fw-bolder">Form submission successful!</div>
-                                    <p>To activate this form, sign up at</p>
-                                    <a class="text-white" href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
-                                </div>
-                            </div>
-                            <!-- Submit error message-->
-                            <!---->
-                            <!-- This is what your users will see when there is-->
-                            <!-- an error submitting the form-->
-                            <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
-                        </form>
+                        <h2 class="mb-4">...</h2>
                     </div>
                 </div>
             </div>
         </section>
+        
         <!-- Footer-->
         <footer class="footer bg-light">
             <div class="container">

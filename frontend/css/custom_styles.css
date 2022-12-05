@@ -1,0 +1,44 @@
+#forkme_banner {
+    display:block;
+    position:absolute;
+    top:0;
+    right: 50px;
+    z-index:10;
+    padding:10px 50px 10px 10px;
+    color:#fff;
+    background:url("../assets/img/blacktocat.png") #0090ff no-repeat 95% 50%;
+    font-weight:700;
+    box-shadow:0 0 10px rgba(0,0,0,0.5);
+    border-bottom-left-radius:2px;
+    border-bottom-right-radius:2px
+   }
+
+.results .results-pdf {
+    padding: 3rem;
+    float: right;
+    /* border: 3px solid #73AD21; */
+}
+
+.results .results-stats {
+    padding: 3rem;
+    float: left;
+    /* border: 3px solid #c2c036; */
+}
+
+.results-img-page {
+    max-width: 17rem;
+    background-size: cover;
+    float: right;
+    border: 3px solid #9a2424;
+}
+
+@media (min-width: 768px) {
+    .results .results-pdf {
+        /* border: 3px solid #7827bb; */
+    }
+}
+
+/* https://www.vecteezy.com/vector-art/12280475-background-technology-artificial-intelligence-mechanica */
+/* https://www.vecteezy.com/vector-art/7024701-technology-artificial-intelligence-mechanical */
+/* https://www.vecteezy.com/vector-art/4242991-abstract-technology-futuristic-digital-concept-dot-pattern-with-lighting-glowing-particles-square-elements-on-dark-blue-background */
+/* https://www.vecteezy.com/vector-art/6430144-hi-technology-line-circuit-board-design-background-with-dark-blue */
