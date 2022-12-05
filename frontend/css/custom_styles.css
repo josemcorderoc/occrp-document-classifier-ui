@@ -22,6 +22,7 @@
 .results .results-stats {
     padding: 3rem;
     float: left;
+    text-align: center;
     /* border: 3px solid #c2c036; */
 }
 
