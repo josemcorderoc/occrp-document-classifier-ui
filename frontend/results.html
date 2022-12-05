@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>    
+    <script src="./bar_plot.js"></script>
+
+</head>
+
+<body>
+    <div class="container text-center">
+        <div>
+        
+             <h1>Document type classifier</h1>
+
+    <p class="mb-5">
+        Some description.
+        Explaining what is happening here.
+        Enjoy the document classification happening
+    </p>
+    
+
+    <div class="row">
+        <div class="col text-center">
+            <h2>Page 1</h2>
+            <img src="img/cayman_island.png">
+        </div>
+        <div class="col text-center">
+            <p>
+                I am 90% sure that you document type is a:
+            </p>
+            <h2>Bank statement</h2>
+            <div id="bar-plot-1"></div>
+
+            <script>
+                var data = [
+                    {
+                    x: [
+                        'bank statement',
+                        'company registry',
+                        'contract',
+                        'court document',
+                        'gazette',
+                        'invoice',
+                        'passport',
+                        'receipt'
+                    ],
+                    y: [0.9, 0.04, 0.01, 0.02, 0.03, 0.01, 0.01, 0.02, 0.03],
+                    type: 'bar'
+                    }
+                ];
+          
+                Plotly.newPlot('bar-plot-1', data);
+            </script>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col text-center">
+            <h2>Page 1</h2>
+            <img src="img/cayman_island.png">
+        </div>
+        <div class="col text-center">
+            <p>
+                I am 90% sure that you document type is a:
+            </p>
+            <h2>Bank statement</h2>
+            <div id="bar-plot-2"></div>
+
+            <script>
+                var data = [
+                    {
+                    x: [
+                        'bank statement',
+                        'company registry',
+                        'contract',
+                        'court document',
+                        'gazette',
+                        'invoice',
+                        'passport',
+                        'receipt'
+                    ],
+                    y: [0.9, 0.04, 0.01, 0.02, 0.03, 0.01, 0.01, 0.02, 0.03],
+                    type: 'bar'
+                    }
+                ];
+          
+                Plotly.newPlot('bar-plot-2', data);
+            </script>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col text-center">
+            <h2>Page 1</h2>
+            <img src="img/cayman_island.png">
+        </div>
+        <div class="col text-center">
+            <p>
+                I am 90% sure that you document type is a:
+            </p>
+            <h2>Bank statement</h2>
+            <div id="bar-plot-3"></div>
+
+            <script>
+                var data = [
+                    {
+                    x: [
+                        'bank statement',
+                        'company registry',
+                        'contract',
+                        'court document',
+                        'gazette',
+                        'invoice',
+                        'passport',
+                        'receipt'
+                    ],
+                    y: [0.9, 0.04, 0.01, 0.02, 0.03, 0.01, 0.01, 0.02, 0.03],
+                    type: 'bar'
+                    }
+                ];
+          
+                Plotly.newPlot('bar-plot-3', data);
+            </script>
+        </div>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <button type="button" class="btn btn-primary">That was fun! One more</button>
+
+
+
+    
+</body>
+</html>
