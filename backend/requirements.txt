@@ -1,5 +1,4 @@
-tensorflow==2.10.0
-tensorflow-io==0.27.0
+tensorflow
 imbalanced-learn
 filetype
 matplotlib
@@ -14,4 +13,8 @@ scipy
 tqdm
 typer
 fastapi
-#occrp
+uvicorn[standard]
+tf-explain
+opencv-python
+#--
+python-multipart
