@@ -7,7 +7,8 @@ window.onload = function() {
 
 function predictFile() {
   console.log("Starting prediction...")
-  $("#loadingio-spinner").removeClass('hidden'); 
+  $("#loadingio-spinner").removeClass('hidden');
+  $("#network-error-message").addClass('hidden');
 
   let data = new FormData();
   data.append('uploaded_file', document.querySelector("#formFile").files[0]);
@@ -34,7 +35,8 @@ async function onResolved(response) {
   $("#loadingio-spinner").addClass('hidden'); 
 
   let json_response = await response.json();
-  console.log(json_response)
+  console.log(json_response);
+  // example: {"prediction":[{"bank-statements":0.00405831029638648,"company-registry":0.0015687638660892844,"contracts":0.0006588833057321608,"court-documents":0.01585322991013527,"gazettes":0.016263607889413834,"invoices":0.00040692422771826386,"passport-scan":0.9983166456222534,"receipts":0.000726760714314878,"shipping-receipts":0.186161607503891,"__predicted":"passport-scan"},{"bank-statements":0.0030406122095882893,"company-registry":0.0047634076327085495,"contracts":0.0029574178624898195,"court-documents":0.021524254232645035,"gazettes":0.004118766635656357,"invoices":0.002362234750762582,"passport-scan":0.9994320273399353,"receipts":0.0008412563474848866,"shipping-receipts":0.01725003495812416,"__predicted":"passport-scan"}]}
   
   if(json_response.error == 1) { 
     throw new Error(json_response.message);
@@ -55,64 +57,63 @@ function onRejected(error) {
 }
 
 async function pdfToThumbnails() {
-  console.log("run pdfToThumbnailS")
-  var thumbnails = []
-  var thumbnail
-  var numPages = $('#formFile').get(0).files[i];
-  var numPages = 1; // for the moment, needs to be fixed
-  for (var i = 0; i < numPages; ++i) {
-    thumbnail = await pdfToThumbnail($('#formFile').get(0).files[i]);
-    console.log("here");
-    console.log(thumbnail);
-    thumbnails = thumbnails.push(thumbnail);
-    console.log("hey");
-    console.log(thumbnails);
-  }
-  return thumbnails
+    console.log("run pdfToThumbnailS")
+    var thumbnails = []
+    var thumbnail
+    // var numPages = $('#formFile').get(0).files[i]; // for the moment, needs to be fixed
+    var numPages = 1;
+    for (var i = 0; i < numPages; ++i) {
+      console.log("time 1");
+      thumbnail = await pdfToThumbnail($('#formFile').get(0).files[i]);
+      console.log("time 3");
+      thumbnails.push(thumbnail);
+    }
+    return (thumbnails);
 }
 
 
 async function pdfToThumbnail(file) {
-  console.log("run pdfToThumbnail")
+  return new Promise((resolve, reject) => {
 
-  fileReader = new FileReader();
-  fileReader.onload = function (ev) {
+    console.log("run pdfToThumbnail")
+
+    fileReader = new FileReader();
+    fileReader.onload = function (ev) {
+      
+      pdfjsLib.getDocument({data: fileReader.result}).promise.then((pdf) => {
     
-    pdfjsLib.getDocument({data: fileReader.result}).promise.then((pdf) => {
-   
-      pdf.getPage(1).then(function (page) {
+        pdf.getPage(1).then(function (page) {
 
-        var desiredWidth = 250;
-        var viewport = page.getViewport({ scale: 1 });
-        var scale = desiredWidth / viewport.width;
-        var scaled = page.getViewport({ scale: scale });
+          var desiredWidth = 250;
+          var viewport = page.getViewport({ scale: 1 });
+          var scale = desiredWidth / viewport.width;
+          var scaled = page.getViewport({ scale: scale });
 
-        var canvas = document.createElement('canvas');
-        var context = canvas.getContext("2d");
-        canvas.height = scaled.height;
-        canvas.width = scaled.width;
+          var canvas = document.createElement('canvas');
+          var context = canvas.getContext("2d");
+          canvas.height = scaled.height;
+          canvas.width = scaled.width;
 
-        var renderContext = {  canvasContext: context,  viewport: scaled };
-        var renderTask = page.render(renderContext);
-        
-        renderTask.promise.then(function () {
-          var image_encoded = canvas.toDataURL();
+          var renderContext = {  canvasContext: context,  viewport: scaled };
+          var renderTask = page.render(renderContext);
           
-          return image_encoded;
+          renderTask.promise.then(function () {
+            var image_encoded = canvas.toDataURL();
+            console.log("time 2");
+            resolve(image_encoded);
+          });
         });
-        
-
       });
-    });
-  };
-  fileReader.readAsArrayBuffer(file);
-  
+    };
+
+    fileReader.readAsArrayBuffer(file);
+  });
 }
 
-function renderResults(response) {
+async function renderResults(response) {
   cleanResults()
-  thumbnails = pdfToThumbnails()
-
+  thumbnails = await pdfToThumbnails()
+  
   $("#loadingio-spinner").addClass('hidden');
   $("#clean-button").removeClass('hidden');
   
@@ -137,11 +138,11 @@ function renderResults(response) {
     $(".results-graph-pseudo", clone).attr('id', graph_name)
     $(".results-prediction-pseudo", clone).text(predicted_label)
 
-    $(".order-lg-1 > h2", clone).text(page);
-    
+    $(".results-pdf > h2", clone).text(page);
+    $(".results-pdf > img", clone).attr('src', thumbnails[0]);
+
 
     clone.appendTo("#result-section");
-    $("#result-section", clone).append(thumbnails[0]);
     
 
     let data = [{
