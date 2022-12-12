@@ -1,0 +1,30 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+tensorflow = "2.10.0"
+imbalanced-learn = "*"
+filetype = "*"
+matplotlib = "*"
+mlflow = "*"
+numpy = "*"
+pandas = "*"
+pdf2image = "*"
+pydantic = "*"
+pytest = "*"
+scikit-learn = "*"
+scipy = "*"
+tqdm = "*"
+typer = "*"
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+tf-explain = "*"
+opencv-python = "*"
+python-multipart = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"

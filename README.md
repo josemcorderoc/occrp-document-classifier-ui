@@ -8,6 +8,7 @@
 - Thumbnails (in JS) (Frederik)
 - Validation of input (max size/num of pages/format) (Frederik)
 - Explain how the prediction is made
+- progress circle thing
 
 ### Hosting !
 - AWS
