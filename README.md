@@ -10,7 +10,8 @@
 - Explain how the prediction is made
 - ~~progress circle thing~~
 - add table of results (datatables.net)
-
+- test mobile version (should at least more or less look okay)
+- set up Google Analytics. Requires cookie banner.
 
 minor to-dos:
 - ~~remove the white horizontal bar at the very top~~

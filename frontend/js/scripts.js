@@ -8,7 +8,7 @@
 function predictFile() {
   console.log("Starting prediction...")
   $("#loadingio-spinner").removeClass('display-non');
-  $("#network-error-message").addClass('display-non');
+  $("#network-error-message").css('visibility', 'hidden');
 
   let data = new FormData();
   data.append('uploaded_file', document.querySelector("#formFile").files[0]);
@@ -47,8 +47,8 @@ function predictFile() {
 function onRejected(error) {
   if (error.name == "TypeError") {
     if (error.message == "NetworkError when attempting to fetch resource.") {
-      console.log(error);
-      $("#network-error-message").removeClass('display-non');
+      console.log("Problem:", error);
+      $("#network-error-message").css('visibility', 'visible');
       $("#loadingio-spinner").addClass('display-non');
     }
   }
