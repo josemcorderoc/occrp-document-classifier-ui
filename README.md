@@ -12,11 +12,11 @@
 - add table of results (datatables.net)
 - test mobile version (should at least more or less look okay)
 - set up Google Analytics. Requires cookie banner.
+- add JPG support
 
 minor to-dos:
 - ~~remove the white horizontal bar at the very top~~
-- add attribution (sources) of images everywhere. links are in the css file
-- download libraries instead of including them
+- add attribution (sources) of images everywhere, below the images or in the Imprint. links are in the css file
 
 ### Hosting !
 - AWS
