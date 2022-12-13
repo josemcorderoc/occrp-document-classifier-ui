@@ -32,7 +32,6 @@ function predictFile() {
 }
 
 async function onResolved(response) {
-  $("#loadingio-spinner").addClass('hidden'); 
 
   let json_response = await response.json();
   console.log(json_response);
@@ -61,29 +60,45 @@ async function pdfToThumbnails() {
     var thumbnails = []
     var thumbnail
     // var numPages = $('#formFile').get(0).files[i]; // for the moment, needs to be fixed
-    var numPages = 1;
-    for (var i = 0; i < numPages; ++i) {
+    var file = $('#formFile').get(0).files[0];
+    var numPages = await getPageNumber(file);
+    for (var i = 1; i < numPages + 1; ++i) {
       console.log("time 1");
-      thumbnail = await pdfToThumbnail($('#formFile').get(0).files[i]);
+      thumbnail = await pdfToThumbnail(file, i);
       console.log("time 3");
       thumbnails.push(thumbnail);
     }
     return (thumbnails);
 }
 
-
-async function pdfToThumbnail(file) {
+async function getPageNumber(file) {
   return new Promise((resolve, reject) => {
-
-    console.log("run pdfToThumbnail")
 
     fileReader = new FileReader();
     fileReader.onload = function (ev) {
       
       pdfjsLib.getDocument({data: fileReader.result}).promise.then((pdf) => {
     
-        pdf.getPage(1).then(function (page) {
+        resolve(pdf.numPages)
 
+      });
+    };
+    fileReader.readAsArrayBuffer(file);
+  });
+}
+
+
+async function pdfToThumbnail(file, page_number) {
+  return new Promise((resolve, reject) => {
+    console.log("run pdfToThumbnail, page " + page_number);
+
+    fileReader = new FileReader();
+    fileReader.onload = function (ev) {
+      
+      pdfjsLib.getDocument({data: fileReader.result}).promise.then((pdf) => {
+    
+        pdf.getPage(page_number).then(function (page) {
+          console.log("I got page " + page_number);
           var desiredWidth = 250;
           var viewport = page.getViewport({ scale: 1 });
           var scale = desiredWidth / viewport.width;
@@ -114,9 +129,6 @@ async function renderResults(response) {
   cleanResults()
   thumbnails = await pdfToThumbnails()
   
-  $("#loadingio-spinner").addClass('hidden');
-  $("#clean-button").removeClass('hidden');
-  
 
   let predictions = response["prediction"]
   for(let i = 0; i < predictions.length; i++) {
@@ -139,7 +151,7 @@ async function renderResults(response) {
     $(".results-prediction-pseudo", clone).text(predicted_label)
 
     $(".results-pdf > h2", clone).text(page);
-    $(".results-pdf > img", clone).attr('src', thumbnails[0]);
+    $(".results-pdf > img", clone).attr('src', thumbnails[i]);
 
 
     clone.appendTo("#result-section");
@@ -152,6 +164,10 @@ async function renderResults(response) {
     }];
 
     Plotly.newPlot(graph_name, data);
+
+    $("#loadingio-spinner").addClass('hidden');
+    $("#clean-button").removeClass('hidden');
+
   }
 }
 
