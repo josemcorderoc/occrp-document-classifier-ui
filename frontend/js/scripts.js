@@ -1,31 +1,144 @@
-document.querySelector("#formFile").addEventListener('change', predictFile);
+// window.onload = function() {
+//   document.querySelector("#formFile").addEventListener('change', () => {
+//     predictFile()
+//       .then(renderResultsBar, onRejected)
+//   });
+// }
 
-async function predictFile() {
-    console.log("Starting prediction...")
+function predictFile() {
+  console.log("Starting prediction...")
+  $("#loadingio-spinner").removeClass('hidden');
+  $("#network-error-message").addClass('hidden');
 
-    let data = new FormData();
-    data.append('uploaded_file', document.querySelector("#formFile").files[0]);
+  let data = new FormData();
+  data.append('uploaded_file', document.querySelector("#formFile").files[0]);
 
-    let response = await fetch('http://localhost:8000/predict', {
+  return new Promise((resolve, reject) => {
+
+    let response = fetch('http://localhost:8000/predict', {
         method: 'POST',
         credentials: 'same-origin',
         body: data
     });
 
-    if(response.status != 200)
-        throw new Error('HTTP response code != 200');
-
-    let json_response = await response.json();
-    if(json_response.error == 1)
-        throw new Error(json_response.message);
-    console.log(json_response)
-    renderResults(json_response["prediction"])
+    if(response.status != 200) {
+      resolve(response);
+    } else {
+      reject(response);
+    }
+    
+  });
 }
 
-function renderResults(response) {
-  cleanResults()
+// async function onResolved(response) {
 
-  let predictions = response["prediction"]
+//   let json_response = await response.json();
+//   console.log(json_response);
+//   // example: {"prediction":[{"bank-statements":0.00405831029638648,"company-registry":0.0015687638660892844,"contracts":0.0006588833057321608,"court-documents":0.01585322991013527,"gazettes":0.016263607889413834,"invoices":0.00040692422771826386,"passport-scan":0.9983166456222534,"receipts":0.000726760714314878,"shipping-receipts":0.186161607503891,"__predicted":"passport-scan"},{"bank-statements":0.0030406122095882893,"company-registry":0.0047634076327085495,"contracts":0.0029574178624898195,"court-documents":0.021524254232645035,"gazettes":0.004118766635656357,"invoices":0.002362234750762582,"passport-scan":0.9994320273399353,"receipts":0.0008412563474848866,"shipping-receipts":0.01725003495812416,"__predicted":"passport-scan"}]}
+  
+//   if(json_response.error == 1) { 
+//     throw new Error(json_response.message);
+//   }
+//   else {
+//     renderResults(json_response)
+//   }
+// }
+
+function onRejected(error) {
+  if (error.name == "TypeError") {
+    if (error.message == "NetworkError when attempting to fetch resource.") {
+      console.log(error);
+      $("#network-error-message").removeClass('hidden');
+      $("#loadingio-spinner").addClass('hidden');
+    }
+  }
+}
+
+async function pdfToThumbnails() {
+    console.log("run pdfToThumbnailS")
+    var thumbnails = []
+    var thumbnail
+    // var numPages = $('#formFile').get(0).files[i]; // for the moment, needs to be fixed
+    var file = $('#formFile').get(0).files[0];
+    var numPages = await getPageNumber(file);
+    for (var i = 1; i < numPages + 1; ++i) {
+      console.log("time 1");
+      thumbnail = await pdfToThumbnail(file, i);
+      console.log("time 3");
+      thumbnails.push(thumbnail);
+    }
+    return (thumbnails);
+}
+
+async function getPageNumber(file) {
+  return new Promise((resolve, reject) => {
+
+    fileReader = new FileReader();
+    fileReader.onload = function (ev) {
+      
+      pdfjsLib.getDocument({data: fileReader.result}).promise.then((pdf) => {
+    
+        resolve(pdf.numPages)
+
+      });
+    };
+    fileReader.readAsArrayBuffer(file);
+  });
+}
+
+
+async function pdfToThumbnail(file, page_number) {
+  return new Promise((resolve, reject) => {
+    console.log("run pdfToThumbnail, page " + page_number);
+
+    fileReader = new FileReader();
+    fileReader.onload = function (ev) {
+      
+      pdfjsLib.getDocument({data: fileReader.result}).promise.then((pdf) => {
+    
+        pdf.getPage(page_number).then(function (page) {
+          console.log("I got page " + page_number);
+          var desiredWidth = 250;
+          var viewport = page.getViewport({ scale: 1 });
+          var scale = desiredWidth / viewport.width;
+          var scaled = page.getViewport({ scale: scale });
+
+          var canvas = document.createElement('canvas');
+          var context = canvas.getContext("2d");
+          canvas.height = scaled.height;
+          canvas.width = scaled.width;
+
+          var renderContext = {  canvasContext: context,  viewport: scaled };
+          var renderTask = page.render(renderContext);
+          
+          renderTask.promise.then(function () {
+            var image_encoded = canvas.toDataURL();
+            console.log("time 2");
+            resolve(image_encoded);
+          });
+        });
+      });
+    };
+
+    fileReader.readAsArrayBuffer(file);
+  });
+}
+
+
+async function renderResultsBar(response) {
+  let json_response = await response.json();
+  console.log(json_response);
+  // example: {"prediction":[{"bank-statements":0.00405831029638648,"company-registry":0.0015687638660892844,"contracts":0.0006588833057321608,"court-documents":0.01585322991013527,"gazettes":0.016263607889413834,"invoices":0.00040692422771826386,"passport-scan":0.9983166456222534,"receipts":0.000726760714314878,"shipping-receipts":0.186161607503891,"__predicted":"passport-scan"},{"bank-statements":0.0030406122095882893,"company-registry":0.0047634076327085495,"contracts":0.0029574178624898195,"court-documents":0.021524254232645035,"gazettes":0.004118766635656357,"invoices":0.002362234750762582,"passport-scan":0.9994320273399353,"receipts":0.0008412563474848866,"shipping-receipts":0.01725003495812416,"__predicted":"passport-scan"}]}
+  
+  if(json_response.error == 1) { 
+    throw new Error(json_response.message);
+  }
+
+  cleanResults()
+  thumbnails = await pdfToThumbnails()
+  
+
+  let predictions = json_response["prediction"]
   for(let i = 0; i < predictions.length; i++) {
     let prediction = predictions[i];
 
@@ -45,9 +158,12 @@ function renderResults(response) {
     $(".results-graph-pseudo", clone).attr('id', graph_name)
     $(".results-prediction-pseudo", clone).text(predicted_label)
 
-    $(".order-lg-1 > h2", clone).text(page);
+    $(".results-pdf > h2", clone).text(page);
+    $(".results-pdf > img", clone).attr('src', thumbnails[i]);
+
 
     clone.appendTo("#result-section");
+    
 
     let data = [{
       x: Object.keys(prediction),
@@ -56,45 +172,60 @@ function renderResults(response) {
     }];
 
     Plotly.newPlot(graph_name, data);
+
+    $("#loadingio-spinner").addClass('hidden');
+    $("#clean-button").removeClass('hidden');
+
   }
 }
 
-document.querySelector("#formFile2").addEventListener('change', predictFileTable);
+// document.querySelector("#formFile2").addEventListener('change', predictFileTable);
 
-async function predictFileTable() {
-    console.log("Starting prediction...")
+// async function predictFileTable() {
+//     console.log("Starting prediction...")
 
-    let data = new FormData();
-    var file = document.querySelector("#formFile2").files[0];
-    let filename = file.name;
-    data.append('uploaded_file', file);
+//     let data = new FormData();
+//     var file = document.querySelector("#formFile2").files[0];
+//     let filename = file.name;
+//     data.append('uploaded_file', file);
 
-    let response = await fetch('http://localhost:8000/predict', {
-        method: 'POST',
-        credentials: 'same-origin',
-        body: data
-    });
+//     let response = await fetch('http://localhost:8000/predict', {
+//         method: 'POST',
+//         credentials: 'same-origin',
+//         body: data
+//     });
 
-    if(response.status != 200)
-        throw new Error('HTTP response code != 200');
+//     if(response.status != 200)
+//         throw new Error('HTTP response code != 200');
 
-    let json_response = await response.json();
-    if(json_response.error == 1)
-        throw new Error(json_response.message);
-    console.log(json_response)
-    renderTable(json_response["prediction"], filename)
-}
+//     let json_response = await response.json();
+//     if(json_response.error == 1)
+//         throw new Error(json_response.message);
+//     console.log(json_response)
+//     renderTable(json_response["prediction"], filename)
+// }
 
 function cleanResults() {
   const results = document.getElementById("result-section");
   results.innerHTML = '';
+  $("#clean-button").addClass('hidden');
 }
 
-
-
-
 // table
-function renderTable(data, filename) {
+async function renderResultTable(response) {
+
+  let filename = "TODO: put filename here";
+
+  let json_response = await response.json();
+  console.log(json_response);
+  // example: {"prediction":[{"bank-statements":0.00405831029638648,"company-registry":0.0015687638660892844,"contracts":0.0006588833057321608,"court-documents":0.01585322991013527,"gazettes":0.016263607889413834,"invoices":0.00040692422771826386,"passport-scan":0.9983166456222534,"receipts":0.000726760714314878,"shipping-receipts":0.186161607503891,"__predicted":"passport-scan"},{"bank-statements":0.0030406122095882893,"company-registry":0.0047634076327085495,"contracts":0.0029574178624898195,"court-documents":0.021524254232645035,"gazettes":0.004118766635656357,"invoices":0.002362234750762582,"passport-scan":0.9994320273399353,"receipts":0.0008412563474848866,"shipping-receipts":0.01725003495812416,"__predicted":"passport-scan"}]}
+  
+  if(json_response.error == 1) { 
+    throw new Error(json_response.message);
+  }
+
+  let data = json_response["prediction"];
+  console.log(data)
   // columns
   var columns = [
     "page",
@@ -164,11 +295,11 @@ function renderTable(data, filename) {
   divContainer.innerHTML = "";
   divContainer.appendChild(table);
 
-  $('#table1').DataTable({
-    dom: 'Bfrtip',
-    buttons: [
-        'copy', 'csv', 'excel'
-    ],
-    scrollX: true,
-});
+    $('#table1').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+          'copy', 'csv', 'excel'
+      ],
+      scrollX: true,
+  });
 }
