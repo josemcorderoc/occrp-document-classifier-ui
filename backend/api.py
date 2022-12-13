@@ -1,13 +1,15 @@
 import os
 import shutil
 import tempfile
+
 from fastapi import FastAPI, UploadFile
-from prediction.predict import load_classifiers
-from prediction.predict_probs import predict_documents_probs
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from occrplib.prediction.predict import load_classifiers
+from occrplib.prediction.predict_probs import predict_documents_probs
+from occrplib.config import settings
 
+app = FastAPI()
 
 # disable CORS for local test purposes
 app.add_middleware(
@@ -18,7 +20,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# load models
+# override settings and load models
+settings.PREDICTION_MODELS[os.environ["MODEL_ARCHITECTURE_NAME"]] = {
+    "binary_classifier": os.environ["BINARY_CLASSIFIER_PATH"],
+    "multiclass_classifier": os.environ["MULTICLASS_CLASSIFIER_PATH"]
+}
+print(settings.PREDICTION_MODELS)
 binary_classifier, document_classifier = load_classifiers("EfficientNetB4")
 
 @app.post("/predict")
