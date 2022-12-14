@@ -139,3 +139,7 @@ https://freeicons.io/office-and-business-3/binders-files-office-file-document-ic
 .display-non{
     display: none !important;
   }
+
+.dataTables_wrapper {
+  padding: 60px;
+}

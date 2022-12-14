@@ -30,19 +30,10 @@ function predictFile() {
   });
 }
 
-// async function onResolved(response) {
-
-//   let json_response = await response.json();
-//   console.log(json_response);
-//   // example: {"prediction":[{"bank-statements":0.00405831029638648,"company-registry":0.0015687638660892844,"contracts":0.0006588833057321608,"court-documents":0.01585322991013527,"gazettes":0.016263607889413834,"invoices":0.00040692422771826386,"passport-scan":0.9983166456222534,"receipts":0.000726760714314878,"shipping-receipts":0.186161607503891,"__predicted":"passport-scan"},{"bank-statements":0.0030406122095882893,"company-registry":0.0047634076327085495,"contracts":0.0029574178624898195,"court-documents":0.021524254232645035,"gazettes":0.004118766635656357,"invoices":0.002362234750762582,"passport-scan":0.9994320273399353,"receipts":0.0008412563474848866,"shipping-receipts":0.01725003495812416,"__predicted":"passport-scan"}]}
-  
-//   if(json_response.error == 1) { 
-//     throw new Error(json_response.message);
-//   }
-//   else {
-//     renderResults(json_response)
-//   }
-// }
+async function onResolved(response) {
+  renderResultsBar(response);
+  renderResultsTable(response);
+}
 
 function onRejected(error) {
   if (error.name == "TypeError") {
@@ -52,10 +43,19 @@ function onRejected(error) {
       $("#loadingio-spinner").addClass('display-non');
     }
   }
+  
+  // some fake data with two pages
+  // TODO comment this out!
+  var json_string = "{\"prediction\":[{\"bank-statements\":0.00405831029638648,\"company-registry\":0.0015687638660892844,\"contracts\":0.0006588833057321608,\"court-documents\":0.01585322991013527,\"gazettes\":0.016263607889413834,\"invoices\":0.00040692422771826386,\"passport-scan\":0.9983166456222534,\"receipts\":0.000726760714314878,\"shipping-receipts\":0.186161607503891,\"__predicted\":\"passport-scan\"},{\"bank-statements\":0.0030406122095882893,\"company-registry\":0.0047634076327085495,\"contracts\":0.0029574178624898195,\"court-documents\":0.021524254232645035,\"gazettes\":0.004118766635656357,\"invoices\":0.002362234750762582,\"passport-scan\":0.9994320273399353,\"receipts\":0.0008412563474848866,\"shipping-receipts\":0.01725003495812416,\"__predicted\":\"passport-scan\"}]}";
+  var json_to_response = new Response(json_string);
+  renderResultsBar(json_to_response);
+
+  json_to_response = new Response(json_string);
+  renderResultsTable(json_to_response);
 }
 
 async function pdfToThumbnails() {
-    console.log("run pdfToThumbnailS")
+    console.log("run pdfToThumbnailS");
     var thumbnails = []
     var thumbnail
     // var numPages = $('#formFile').get(0).files[i]; // for the moment, needs to be fixed
@@ -147,23 +147,28 @@ async function renderResultsBar(response) {
     delete prediction["__predicted"]
 
     let page = "Page " + (i+1)
-    let name = "page" + i
-    let graph_name = name + '-graph'
+    let name = "results-thumbnail-" + i
+    let name_graph = "results-collapsible-" + i;
+    let name_card = "results-collapsible-card-" + i;
 
-    let clone = $("#results-template").clone()
-
-    clone.show();    
+    // clone thumbnail
+    let clone = $("#results-thumbnail-template").clone()
     clone.attr('id', name)
 
-    $(".results-graph-pseudo", clone).attr('id', graph_name)
-    $(".results-prediction-pseudo", clone).text(predicted_label)
+    $("h3", clone).text(predicted_label);
+    $("img", clone).attr('src', thumbnails[i]);
+    $("p > a", clone).attr('href', '#' + name_graph);
+    // $(".results-graph-pseudo", clone).attr('id', graph_name)
 
-    $(".results-pdf > h2", clone).text(page);
-    $(".results-pdf > img", clone).attr('src', thumbnails[i]);
+    clone.insertAfter("#results-thumbnail-template");
+    clone.show();
+    delete clone;
 
-
-    clone.appendTo("#result-section");
-    
+    // clone collapsible bar graph section and insert graph
+    let clone2 = $("#results-collapsible-template").clone();
+    clone2.attr('id', name_graph);
+    $(".card", clone2).attr('id', name_card);
+    clone2.insertAfter("#results-collapsible-template");
 
     let data = [{
       x: Object.keys(prediction),
@@ -171,7 +176,19 @@ async function renderResultsBar(response) {
       type: 'bar'
     }];
 
-    Plotly.newPlot(graph_name, data);
+    let layout = {
+      title: 'Page/Document: TODO',
+      xaxis: {
+        showgrid: false,
+        zeroline: false
+      },
+      yaxis: {
+        title: 'Probability',
+        showline: false
+      },
+    };
+    
+    Plotly.newPlot(name_card, data, layout);
 
     $("#loadingio-spinner").addClass('display-non');
     $("#clean-button").removeClass('display-non');
@@ -206,13 +223,13 @@ async function renderResultsBar(response) {
 // }
 
 function cleanResults() {
-  const results = document.getElementById("result-section");
-  results.innerHTML = '';
+  // const results = document.getElementById("result-section");
+  // results.innerHTML = '';
   $("#clean-button").addClass('display-non');
 }
 
 // table
-async function renderResultTable(response) {
+async function renderResultsTable(response) {
 
   let filename = "TODO: put filename here";
 
@@ -291,7 +308,7 @@ async function renderResultTable(response) {
   }
 
   // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
-  var divContainer = document.getElementById("result-table");
+  var divContainer = document.getElementById("results-table");
   divContainer.innerHTML = "";
   divContainer.appendChild(table);
 
@@ -302,4 +319,7 @@ async function renderResultTable(response) {
       ],
       scrollX: true,
   });
+
+  // remove the loading spinner image
+  $("#loadingio-spinner").addClass('display-non');
 }
