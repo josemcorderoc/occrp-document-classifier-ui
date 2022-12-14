@@ -2,23 +2,31 @@
 
 ## Quickstart
 
-1. Create environment
+1. Move to `backend` directory
+```bash
+cd backend
+```
 
-You can use any enviroment manager (conda, Pipenv, virtualenv, etc..)
+2. Pass DFKI Gitlab credentials
+```bash
+export GITLAB_USERNAME=your.username
+export GITLAB_PASSWORD=yourpassword
+```
+This step won't be necessary once the OCCRP repo is publicly available
 
+3. Create Python environment and install requirements
+
+You can use any enviroment manager (conda, Pipenv, virtualenv, etc..). For example:
 ```bash
 # conda example
-conda create -n occrp-api python=3.10 -y
+conda env create -f environment.yml
 conda activate occrp-api
 
 # pipenv example
 pipenv install
 pipenv shell
-```
 
-2. Install the requirements
-```bash
-cd backend
+# using pip
 pip install -r requirements.txt
 ```
 
@@ -29,7 +37,7 @@ The .env file contains three variables: the model architecture to be used, the p
 ```bash
 MODEL_ARCHITECTURE_NAME=EfficientNetB4
 BINARY_CLASSIFIER_PATH="/some/local/path/to/binary/model/EfficientNetB4_binary_final"  # replace this path with a path of your computer containing the model
-MULTICLASS_CLASSIFIER_PATH="/some/local/path/to/multiclass/model/EfficientNetB4_multiclass_final" # replace this path with a path of your computer containing the model
+MULTICLASS_CLASSIFIER_PATH="/some/local/path/to/multiclass/model/EfficientNetB4_multiclass_final"  # replace this path with a path of your computer containing the model
 ```
 
 It is recommended to add the path between quotes. MODEL_ARCHITECTURE_NAME should be consistent with the model type in both paths. A model folder should have this minimal structure:
