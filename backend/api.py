@@ -25,8 +25,7 @@ settings.PREDICTION_MODELS[os.environ["MODEL_ARCHITECTURE_NAME"]] = {
     "binary_classifier": os.environ["BINARY_CLASSIFIER_PATH"],
     "multiclass_classifier": os.environ["MULTICLASS_CLASSIFIER_PATH"]
 }
-print(settings.PREDICTION_MODELS)
-binary_classifier, document_classifier = load_classifiers("EfficientNetB4")
+binary_classifier, document_classifier = load_classifiers(os.environ["MODEL_ARCHITECTURE_NAME"])
 
 @app.post("/predict")
 async def create_upload_file(uploaded_file: UploadFile):

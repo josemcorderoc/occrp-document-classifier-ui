@@ -1,4 +1,4 @@
-git+https://git.opendfki.de/dssgxdfki/dssgxdfki2022-occrp.git@feat/repackaging#egg=occrp-document-classifier
+git+https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@git.opendfki.de/dssgxdfki/dssgxdfki2022-occrp.git@feat/repackaging#egg=occrp-document-classifier
 fastapi
 uvicorn[standard]
 python-multipart
