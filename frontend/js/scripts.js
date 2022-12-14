@@ -7,8 +7,8 @@
 
 function predictFile() {
   console.log("Starting prediction...")
-  $("#loadingio-spinner").removeClass('hidden');
-  $("#network-error-message").addClass('hidden');
+  $("#loadingio-spinner").removeClass('display-non');
+  $("#network-error-message").css('visibility', 'hidden');
 
   let data = new FormData();
   data.append('uploaded_file', document.querySelector("#formFile").files[0]);
@@ -47,9 +47,9 @@ function predictFile() {
 function onRejected(error) {
   if (error.name == "TypeError") {
     if (error.message == "NetworkError when attempting to fetch resource.") {
-      console.log(error);
-      $("#network-error-message").removeClass('hidden');
-      $("#loadingio-spinner").addClass('hidden');
+      console.log("Problem:", error);
+      $("#network-error-message").css('visibility', 'visible');
+      $("#loadingio-spinner").addClass('display-non');
     }
   }
 }
@@ -173,8 +173,8 @@ async function renderResultsBar(response) {
 
     Plotly.newPlot(graph_name, data);
 
-    $("#loadingio-spinner").addClass('hidden');
-    $("#clean-button").removeClass('hidden');
+    $("#loadingio-spinner").addClass('display-non');
+    $("#clean-button").removeClass('display-non');
 
   }
 }
@@ -208,7 +208,7 @@ async function renderResultsBar(response) {
 function cleanResults() {
   const results = document.getElementById("result-section");
   results.innerHTML = '';
-  $("#clean-button").addClass('hidden');
+  $("#clean-button").addClass('display-non');
 }
 
 // table

@@ -4033,8 +4033,8 @@ textarea.form-control-lg {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 0.0 rem;
+  padding-bottom: 0.0 rem;
 }
 .navbar > .container,
 .navbar > .container-fluid,
@@ -11311,7 +11311,7 @@ header.masthead {
 header.masthead:before {
   content: "";
   position: absolute;
-  background-color: #1c375e;
+  background-color: #114A79;
   height: 100%;
   width: 100%;
   top: 0;
@@ -11323,8 +11323,8 @@ header.masthead h1, header.masthead .h1 {
 }
 @media (min-width: 768px) {
   header.masthead {
-    padding-top: 12rem;
-    padding-bottom: 12rem;
+    padding-top: 10rem;
+    padding-bottom: 16rem;
   }
   header.masthead h1, header.masthead .h1 {
     font-size: 3rem;
@@ -11340,7 +11340,7 @@ header.masthead h1, header.masthead .h1 {
 }
 @media (min-width: 768px) {
   .showcase .showcase-text {
-    padding: 7rem;
+    padding: 5rem;
   }
 }
 
@@ -11367,7 +11367,7 @@ header.masthead h1, header.masthead .h1 {
 .call-to-action:before {
   content: "";
   position: absolute;
-  background-color: #1c375e;
+  background-color: #114A79;
   height: 100%;
   width: 100%;
   top: 0;

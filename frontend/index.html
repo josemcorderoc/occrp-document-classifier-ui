@@ -7,7 +7,7 @@
         <meta name="author" content="" />
         <title>Document Classifier</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="assets/41912835516354197624526-16.ico" />
         <!-- Bootstrap icons-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css" />
         <!-- Google fonts-->
@@ -34,25 +34,29 @@
 
     </head>
     <body>
-        <!-- Navigation-->
         <nav class="navbar navbar-light bg-light static-top">
             <div class="container">
                 <!-- <a class="navbar-brand" href="#!"></a> -->
                 <!-- <a class="btn btn-primary" href="https://www.github.com" style="background:url('assets/img/blacktocat.png') #0090ff no-repeat 95% 50%; padding:10px 50px 10px 10px;">View on GitHub</a> -->
-                <a id="forkme_banner" href="https://www.github.com">View on GitHub</a>
+                
             </div>
         </nav>
-
+        
         <!-- Masthead-->
         <header class="masthead">
+            <a id="forkme_banner" href="https://www.github.com">View on GitHub</a>
             <div class="container position-relative">
                 <div class="row justify-content-center">
                     <div class="col-xl-6">
                         <div class="text-center text-white">
                             <!-- Page heading-->
-                            <h1 class="mb-5">Document classifier!</h1>
+                            <div></div>
+                            <h1 class="mb-4">Document classifier <img src="assets/41912835516354197624526-128.png" width="50"></h1>
+                            
                             <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                                <p class="lead mb-0">This document classifier is really great. It will improve your life enormously. Please recommend us. We need funding 🥺 </p>
+                                <p class="lead mb-0 pb-5">
+                                    Which type of document is this? Upload a PDF or JPG <br> and find out now. <br>
+                                </p>
                             </div>
                             <!-- Signup form-->
                             <!-- * * * * * * * * * * * * * * *-->
@@ -92,9 +96,9 @@
                                 <div class="col-auto">
                                     <!-- <input class="btn btn-primary" id="showbutton" type="button" value="Clean" > -->
 
-                                    <button id="clean-button" type="button" class="btn btn-primary hidden" onclick="cleanResults()">Clean</button>
-                                    <div id="loadingio-spinner" class="loadingio-spinner-spinner-q8uh11jn678 d-flex justify-content-center hidden"><div class="ldio-dj66gl9h8u6"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
-                                    <div id="network-error-message" class="alert alert-danger hidden" role="alert">
+                                    <button id="clean-button" type="button" class="btn btn-primary display-non" onclick="cleanResults()">Clean</button>
+                                    <div id="loadingio-spinner" class="loadingio-spinner-spinner-q8uh11jn678 d-flex justify-content-center display-non"><div class="ldio-dj66gl9h8u6"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+                                    <div id="network-error-message" class="alert alert-danger" role="alert" style="visibility:hidden">
                                         Network error: Please try again later or <a href="#made-by-box">contact</a> an administrator.
                                     </div>
                                     <!-- <input class="btn btn-primary" id="hidebutton" type="button" value="Hide results"> -->
@@ -114,7 +118,7 @@
                     <div class="">
                         <div class="text-end text-white">
                             <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                                <p class="lead mb-0" style="font-size:0.9em">Background image by Kirsty Pargeter on <a href="https://www.vecteezy.com/vector-art/6954145-low-poly-abstract-design-background" style="color:black">Vecteezy</a></p>
+                                <p class="lead mb-0" style="font-size:0.9em">Image by Kirsty Pargeter on <a href="https://www.vecteezy.com/vector-art/6954145-low-poly-abstract-design-background" style="color:black">Vecteezy</a></p>
                             </div>
                         </div>
                     </div>
@@ -178,25 +182,48 @@
         <!-- Image Info section (Showcase)-->
         <section class="showcase">
             <div class="container-fluid p-0">
-                <div class="row g-0">
-                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-1.jpg')"></div>
+                <div class="row g-0 ">
+                    <div class="col-lg-6 order-lg-2 text-white showcase-img d-flex align-items-end justify-content-end" style="background-image: url('assets/img/bg-showcase-1.jpg')">
+                        <div class="features-icons-item mb-5 mb-lg-0 mb-lg-3 px-2">
+                            <p class="lead mb-0" style="font-size:0.9em">Image by @attributed on <a href="https://www.vecteezy.com/vector-art/6954145-low-poly-abstract-design-background" style="color:white">Link</a></p>
+                        </div>
+                    </div>
                     <div class="col-lg-6 order-lg-1 my-auto showcase-text">
-                        <h2>How it works</h2>
-                        <p class="lead mb-0">Magic and machine learning. <br> Please see our paper for more information. </p>
+                        <h2>Powered by artificial intelligence <img src="assets/battery.png" width=50></h2>
+                        <p class="lead mb-0">
+                            How does it work? The machine model in the background identifies typical visual features, distinguishing 9 different document types.
+                            <br><br>
+                            Training data were provided by the Organisation for Corruption and Crime Reporting Project (OCCRP).
+                            
+                            <br><br> For technical information see <a href="#cite-us">our paper</a> or visit <a href="www.github.com">our GitHub repository</a>. 
+                        </p>
                     </div>
                 </div>
                 <div class="row g-0">
-                    <div class="col-lg-6 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-2.jpg')"></div>
+                    <div class="col-lg-6 text-white showcase-img d-flex align-items-end justify-content-start" style="background-image: url('assets/img/bg-showcase-2.jpg')">
+                        <div class="features-icons-item mb-5 mb-lg-0 mb-lg-3 px-2">
+                            <p class="lead mb-0" style="font-size:0.9em">Image by @attributed on <a href="https://www.vecteezy.com/vector-art/6954145-low-poly-abstract-design-background" style="color:white">Link</a></p>
+                        </div>
+                    </div>
                     <div class="col-lg-6 my-auto showcase-text">
-                        <h2>Anything else we want to say</h2>
-                        <p class="lead mb-0">KL for life</p>
+                        <h2>Feedback? Suggestions?</h2>
+                        <p class="lead mb-0">
+                            We are happy to share our work. Feel free to contact us via ... 
+                        </p>
                     </div>
                 </div>
                 <div class="row g-0">
-                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-3.jpg')"></div>
-                    <div class="col-lg-6 order-lg-1 my-auto showcase-text">
-                        <h2>Cite us</h2>
-                        <p class="lead mb-0">If you want to cite this, please refer to our paper: <br> Cordero, J.M., Henn, T., Holtel, F. & Sanchez, J.S. (2022) ... </p>
+                    <div class="col-lg-6 order-lg-2 text-white showcase-img d-flex align-items-end justify-content-end" style="background-image: url('assets/img/bg-showcase-3.jpg')">
+                        <div class="features-icons-item mb-5 mb-lg-0 mb-lg-3 px-2">
+                            <p class="lead mb-0" style="font-size:0.9em">Image by @attributed on <a href="https://www.vecteezy.com/vector-art/6954145-low-poly-abstract-design-background" style="color:white">Link</a></p>
+                        </div>
+                    </div>
+                    <div id="cite-us" class="col-lg-6 order-lg-1 my-auto showcase-text">
+                        <h2>Cite us <img src="assets/quotes.png" width=50></h2>
+                        <p class="lead mb-0">If you want to cite this, please refer to our paper: 
+                            <!-- <br> Cordero, J.M., Henn, T., Holtel, F. & Sanchez, J.S. (2022)   -->
+                            ...
+                        </p>
                     </div>
                 </div>
             </div>
@@ -205,8 +232,8 @@
         <!-- Made by (Testimonials)-->
         <section id="made-by-box" class="testimonials text-center bg-light">
             <div class="container">
-                <h2 class="mb-5">Made by...</h2>
-                <div class="row">
+                <h2 class="mb-5"><img src="assets/feather.png" width=50>Made by...</h2>
+                <div class="row pb-5">
                     <div class="col-lg-3">
                         <div class="testimonial-item mx-auto mb-5 mb-lg-0">
                             <img class="img-fluid rounded-circle mb-3" src="assets/img/testimonials-1.jpg" alt="..." />
@@ -236,7 +263,32 @@
                         </div>
                     </div>                    
                 </div>
+                <div class="row pb-5">
+                    <div class="col-lg-6">
+                        <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                            <img class="img-fluid rounded-circle mb-3" src="assets/img/willy_wonka.jpg" alt="..." />
+                            <h5>Andrea</h5>
+                            <p class="font-weight-light mb-0"></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                            <img class="img-fluid rounded-circle mb-3" src="assets/img/dog_strong.jpeg" alt="..." />
+                            <h5>Sebastian</h5>
+                            <p class="font-weight-light mb-0"></p>
+                        </div>
+                    </div>                 
+                </div>                
             </div>
+            <div class="container">
+                <h2 class="mb-5"><img src="assets/cooperation.png" width=50> In cooperation with OCCRP</h2>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <img src="assets/occrp_logo250.png">
+                    </div>
+                </div>
+            </div>
+            
         </section>
 
         <!-- Seperator (Call to Action)-->
@@ -258,11 +310,7 @@
                         <ul class="list-inline mb-2">
                             <li class="list-inline-item"><a href="#!">About</a></li>
                             <li class="list-inline-item">⋅</li>
-                            <li class="list-inline-item"><a href="#!">Contact</a></li>
-                            <li class="list-inline-item">⋅</li>
-                            <li class="list-inline-item"><a href="#!">Terms of Use</a></li>
-                            <li class="list-inline-item">⋅</li>
-                            <li class="list-inline-item"><a href="#!">Privacy Policy</a></li>
+                            <li class="list-inline-item"><a href="#!">Imprint</a></li>
                         </ul>
                         <p class="text-muted small mb-4 mb-lg-0">&copy; Cordero, Henn, Holtel & Sanchez (2022). All Rights Reserved.</p>
                     </div>
