@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+occrp-document-classifier = {ref = "feat/repackaging", git = "https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@git.opendfki.de/dssgxdfki/dssgxdfki2022-occrp.git"}
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+python-multipart = "*"
+
+[requires]
+python_version = "3.10"
