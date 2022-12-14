@@ -3,36 +3,49 @@
 ## Quickstart
 
 1. Create environment
+
+You can use any enviroment manager (conda, Pipenv, virtualenv, etc..)
+
 ```bash
+# conda example
 conda create -n occrp-api python=3.10 -y
 conda activate occrp-api
+
+# pipenv example
+pipenv install
+pipenv shell
 ```
+
 2. Install the requirements
 ```bash
 cd backend
 pip install -r requirements.txt
 ```
 
-3. Install the occrp document classifier package
+3. Fill the .env file
 
-In a different folder, clone the repo of doc classifier or pull the latest version:
+The .env file contains three variables: the model architecture to be used, the path to the middlepage binary classifier and the path to the multiclass document classifier. In order to make the model weights accesible to the API, you need to declare their absolute directory:
+
 ```bash
-git clone git@git.opendfki.de:dssgxdfki/dssgxdfki2022-occrp.git
-cd dssgxdfki2022-occrp
-# or "git pull" if it's already cloned
+MODEL_ARCHITECTURE_NAME=EfficientNetB4
+BINARY_CLASSIFIER_PATH="/some/local/path/to/binary/model/EfficientNetB4_binary_final"  # replace this path with a path of your computer containing the model
+MULTICLASS_CLASSIFIER_PATH="/some/local/path/to/multiclass/model/EfficientNetB4_multiclass_final" # replace this path with a path of your computer containing the model
 ```
 
-Follow all the instructions in the README.md contained in the root folder of the repo to set the config file and unpack the models. Afther that, install the package in the environment created previously.
+It is recommended to add the path between quotes. MODEL_ARCHITECTURE_NAME should be consistent with the model type in both paths. A model folder should have this minimal structure:
 ```
-conda activate occrp-api
-python setup.py install
-
-
-
+EfficientNetB4_multiclass_final   # example name
+├── assessment
+├── model_inputs
+│   ├── labels.csv
+│   └── ...
+├── weights
+│   ├── best model          
 ```
-4.  Return to the API repo and run the API
+
+4.  Run the API
 ```
-uvicorn api:app --reload
+uvicorn api:app --reload --env-file .env
 ```
 
 Wait until the message "Application startup complete" is displayed, then you can test the API in this url:
