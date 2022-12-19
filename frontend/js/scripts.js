@@ -155,12 +155,17 @@ async function renderResultsBar(response) {
     let clone = $("#results-thumbnail-template").clone()
     clone.attr('id', name)
 
-    $("h3", clone).text(predicted_label);
+    $("h5", clone).text(predicted_label);
     $("img", clone).attr('src', thumbnails[i]);
     $("p > a", clone).attr('href', '#' + name_graph);
+    $(".page-number-pseudo", clone).text(i+1);
     // $(".results-graph-pseudo", clone).attr('id', graph_name)
 
-    clone.insertAfter("#results-thumbnail-template");
+    // clone.insertAfter("#results-title");
+
+    $("#result-thumbnails").append(clone)
+
+
     clone.show();
     delete clone;
 
