@@ -21,7 +21,7 @@ function predictFile() {
 
   return new Promise((resolve, reject) => {
 
-    let response = fetch('http://localhost:8000/predict', {
+    let response = fetch('https://occrp-api-pbtmu45elq-uc.a.run.app/predict', {
         method: 'POST',
         credentials: 'same-origin',
         body: data
