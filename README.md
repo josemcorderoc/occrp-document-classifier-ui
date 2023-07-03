@@ -1,7 +1,18 @@
 # README
 
+# Set up
+This is the graphical user interface for the [OCCRP document classifier](https://github.com/DSSGxDFKI/occrp-document-classifier).
 
-## to-do
+A demo of this UI is hosted here: https://josemcorderoc.github.io/occrp-document-classifier-ui/. The demo only provides classification results of three example documents. The classification results are pre-computed as the machine learning model is not live. 
+
+In order to run the actual model, clone this repo via `git clone https://github.com/josemcorderoc/occrp-document-classifier-ui.git`. Open `frontend/index.html` in a browser. It should look like this:
+
+
+ ![Landing page](landing_page.png)
+
+For setting up the backend to this, see [backend/README.md](https://github.com/josemcorderoc/occrp-document-classifier-ui/tree/main/backend).
+
+## To Dos
 
 - ~~Render prediction JSON (JM)~~
 - ~~Clear button (JM)~~ 
@@ -15,7 +26,8 @@
     - CNN
     - Which classes do we distinguish
 - test mobile version (at least the information should look more or less look okay)
-- set up Google Analytics. Add cookie banner and info on imprint page
+- ~~set up Google Analytics.~~
+- Add cookie banner and info on imprint page
 - add imprint page
 - add JPG support
 - predicted other vs. predicted 0 have to be more clear in chart and bar chart
@@ -24,18 +36,7 @@
 - design bar chart (probabilites in %, center bar chart)
 - expand/collapse table has to be layouted (paddings) and is buggy at the moment, first time it doesn't collapse. When closed it should only read Expand, otherwise Collapse.
 - result section should not be displayed in the beginning
-- probably add DSSG logo at the bottom
+- ~~probably add DSSG logo at the bottom~~
 - add attribution (sources) of images everywhere, below the images or in the Imprint. links are in the css file
-- for contacting maybe adding a contact formular? or give out our e-mails, but then need some spam protection
+- contact: maybe adding a contact formular? or give out our e-mails, but then might need some spam protection
 
-### Hosting !
-- AWS
-- Heroku
-- Google Cloud
-- Azure
-- RedHat
-
-### Parameters to compare:
-- Memory usage (RAM)
-- Docker image size
-- Disk usage (only models?)
