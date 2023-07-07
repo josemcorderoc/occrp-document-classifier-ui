@@ -1,12 +1,18 @@
-// window.onload = function() {
-//   document.querySelector("#formFile").addEventListener('change', () => {
-//     predictFile()
-//       .then(renderResultsBar, onRejected)
-//   });
-// }
+var classes = [
+  "bank-statements",
+  "company-registry",
+  "contracts",
+  "court-documents",
+  "gazettes",
+  "invoices",
+  "passport-scan",
+  "receipts",
+  "shipping-receipts"
+];
 
 function predictFile() {
   console.log("Starting prediction...")
+  cleanResults();
   $("#loadingio-spinner").removeClass('display-non');
   $("#network-error-message").css('visibility', 'hidden');
 
@@ -15,7 +21,7 @@ function predictFile() {
 
   return new Promise((resolve, reject) => {
 
-    let response = fetch('http://localhost:8000/predict', {
+    let response = fetch('https://occrp-api-pbtmu45elq-uc.a.run.app/predict', {
         method: 'POST',
         credentials: 'same-origin',
         body: data
@@ -30,19 +36,27 @@ function predictFile() {
   });
 }
 
-// async function onResolved(response) {
+async function onResolved(response) {
+  let json_response = await response.json();
 
-//   let json_response = await response.json();
-//   console.log(json_response);
-//   // example: {"prediction":[{"bank-statements":0.00405831029638648,"company-registry":0.0015687638660892844,"contracts":0.0006588833057321608,"court-documents":0.01585322991013527,"gazettes":0.016263607889413834,"invoices":0.00040692422771826386,"passport-scan":0.9983166456222534,"receipts":0.000726760714314878,"shipping-receipts":0.186161607503891,"__predicted":"passport-scan"},{"bank-statements":0.0030406122095882893,"company-registry":0.0047634076327085495,"contracts":0.0029574178624898195,"court-documents":0.021524254232645035,"gazettes":0.004118766635656357,"invoices":0.002362234750762582,"passport-scan":0.9994320273399353,"receipts":0.0008412563474848866,"shipping-receipts":0.01725003495812416,"__predicted":"passport-scan"}]}
-  
-//   if(json_response.error == 1) { 
-//     throw new Error(json_response.message);
-//   }
-//   else {
-//     renderResults(json_response)
-//   }
-// }
+  if(json_response.error == 1) { 
+    throw new Error(json_response.message);
+  }
+
+  Promise.all([
+    renderResultsBar(json_response),
+    renderResultsTable(json_response)
+  ]).then(unhideResultsSection)
+}
+
+function unhideResultsSection() {
+  $("#loadingio-spinner").addClass('display-non');
+  $("#clean-button").removeClass('display-non');
+  $("#results-section").removeClass('display-non');
+
+  let resultsSection = document.getElementById("results-section");
+  resultsSection.scrollIntoView();
+}
 
 function onRejected(error) {
   if (error.name == "TypeError") {
@@ -52,10 +66,19 @@ function onRejected(error) {
       $("#loadingio-spinner").addClass('display-non');
     }
   }
+  
+  // some fake data with two pages
+  // TODO comment this out!
+  var json_string = "{\"prediction\":[{\"bank-statements\":0.00405831029638648,\"company-registry\":0.0015687638660892844,\"contracts\":0.0006588833057321608,\"court-documents\":0.01585322991013527,\"gazettes\":0.016263607889413834,\"invoices\":0.00040692422771826386,\"passport-scan\":0.9983166456222534,\"receipts\":0.000726760714314878,\"shipping-receipts\":0.186161607503891,\"__predicted\":\"passport-scan\"},{\"bank-statements\":0.0030406122095882893,\"company-registry\":0.0047634076327085495,\"contracts\":0.0029574178624898195,\"court-documents\":0.021524254232645035,\"gazettes\":0.004118766635656357,\"invoices\":0.002362234750762582,\"passport-scan\":0.9994320273399353,\"receipts\":0.0008412563474848866,\"shipping-receipts\":0.01725003495812416,\"__predicted\":\"passport-scan\"}]}";
+  var json_to_response = new Response(json_string);
+  renderResultsBar(json_to_response);
+
+  json_to_response = new Response(json_string);
+  renderResultsTable(json_to_response);
 }
 
 async function pdfToThumbnails() {
-    console.log("run pdfToThumbnailS")
+    console.log("run pdfToThumbnailS");
     var thumbnails = []
     var thumbnail
     // var numPages = $('#formFile').get(0).files[i]; // for the moment, needs to be fixed
@@ -89,7 +112,7 @@ async function getPageNumber(file) {
 
 async function pdfToThumbnail(file, page_number) {
   return new Promise((resolve, reject) => {
-    console.log("run pdfToThumbnail, page " + page_number);
+    // console.log("run pdfToThumbnail, page " + page_number);
 
     fileReader = new FileReader();
     fileReader.onload = function (ev) {
@@ -97,7 +120,7 @@ async function pdfToThumbnail(file, page_number) {
       pdfjsLib.getDocument({data: fileReader.result}).promise.then((pdf) => {
     
         pdf.getPage(page_number).then(function (page) {
-          console.log("I got page " + page_number);
+          // console.log("I got page " + page_number);
           var desiredWidth = 250;
           var viewport = page.getViewport({ scale: 1 });
           var scale = desiredWidth / viewport.width;
@@ -125,20 +148,15 @@ async function pdfToThumbnail(file, page_number) {
 }
 
 
-async function renderResultsBar(response) {
-  let json_response = await response.json();
-  console.log(json_response);
-  // example: {"prediction":[{"bank-statements":0.00405831029638648,"company-registry":0.0015687638660892844,"contracts":0.0006588833057321608,"court-documents":0.01585322991013527,"gazettes":0.016263607889413834,"invoices":0.00040692422771826386,"passport-scan":0.9983166456222534,"receipts":0.000726760714314878,"shipping-receipts":0.186161607503891,"__predicted":"passport-scan"},{"bank-statements":0.0030406122095882893,"company-registry":0.0047634076327085495,"contracts":0.0029574178624898195,"court-documents":0.021524254232645035,"gazettes":0.004118766635656357,"invoices":0.002362234750762582,"passport-scan":0.9994320273399353,"receipts":0.0008412563474848866,"shipping-receipts":0.01725003495812416,"__predicted":"passport-scan"}]}
-  
-  if(json_response.error == 1) { 
-    throw new Error(json_response.message);
-  }
 
-  cleanResults()
+async function renderResultsBar(response) {
+
+  // example: {"prediction":[{"bank-statements":0.00405831029638648,"company-registry":0.0015687638660892844,"contracts":0.0006588833057321608,"court-documents":0.01585322991013527,"gazettes":0.016263607889413834,"invoices":0.00040692422771826386,"passport-scan":0.9983166456222534,"receipts":0.000726760714314878,"shipping-receipts":0.186161607503891,"__predicted":"passport-scan"},{"bank-statements":0.0030406122095882893,"company-registry":0.0047634076327085495,"contracts":0.0029574178624898195,"court-documents":0.021524254232645035,"gazettes":0.004118766635656357,"invoices":0.002362234750762582,"passport-scan":0.9994320273399353,"receipts":0.0008412563474848866,"shipping-receipts":0.01725003495812416,"__predicted":"passport-scan"}]}
+  // cleanResults()
   thumbnails = await pdfToThumbnails()
   
 
-  let predictions = json_response["prediction"]
+  let predictions = response["prediction"]
   for(let i = 0; i < predictions.length; i++) {
     let prediction = predictions[i];
 
@@ -147,159 +165,128 @@ async function renderResultsBar(response) {
     delete prediction["__predicted"]
 
     let page = "Page " + (i+1)
-    let name = "page" + i
-    let graph_name = name + '-graph'
+    let name = "results-thumbnail-" + i
+    let name_graph = "results-collapsible-" + i;
+    let name_card = "results-collapsible-card-" + i;
 
-    let clone = $("#results-template").clone()
-
-    clone.show();    
+    // clone thumbnail
+    let clone = $("#results-thumbnail-template").clone()
     clone.attr('id', name)
 
-    $(".results-graph-pseudo", clone).attr('id', graph_name)
-    $(".results-prediction-pseudo", clone).text(predicted_label)
+    $("h5", clone).text(predicted_label);
+    $("img", clone).attr('src', thumbnails[i]);
+    $("p > a", clone).attr('href', '#' + name_graph);
+    $(".page-number-pseudo", clone).text(i+1);
+    $("#result-thumbnails").append(clone)
 
-    $(".results-pdf > h2", clone).text(page);
-    $(".results-pdf > img", clone).attr('src', thumbnails[i]);
+    clone.show();
+    delete clone;
 
-
-    clone.appendTo("#result-section");
+    // clone collapsible bar graph section and insert graph
+    let clone2 = $("#results-collapsible-template").clone();
+    clone2.attr('id', name_graph);
     
+    $(".card", clone2).attr('id', name_card);
+
+    $("#results-bar-plot").append(clone2);
+
+    let cleanedPrediction = Object.fromEntries(classes.map(col => [col, prediction[col]]));
 
     let data = [{
-      x: Object.keys(prediction),
-      y: Object.values(prediction),
+      x: Object.keys(cleanedPrediction),
+      y: Object.values(cleanedPrediction),
       type: 'bar'
     }];
 
-    Plotly.newPlot(graph_name, data);
-
-    $("#loadingio-spinner").addClass('display-non');
-    $("#clean-button").removeClass('display-non');
-
+    let layout = {
+      title: page,
+      xaxis: {
+        showgrid: false,
+        zeroline: false,
+        tickangle: 45,
+        automargin: true  
+      },
+      yaxis: {
+        title: 'Probability',
+        showline: false
+      },
+      width: 450,
+      height: 300,
+    };
+    
+    Plotly.newPlot(name_graph, data, layout);
   }
 }
 
-// document.querySelector("#formFile2").addEventListener('change', predictFileTable);
-
-// async function predictFileTable() {
-//     console.log("Starting prediction...")
-
-//     let data = new FormData();
-//     var file = document.querySelector("#formFile2").files[0];
-//     let filename = file.name;
-//     data.append('uploaded_file', file);
-
-//     let response = await fetch('http://localhost:8000/predict', {
-//         method: 'POST',
-//         credentials: 'same-origin',
-//         body: data
-//     });
-
-//     if(response.status != 200)
-//         throw new Error('HTTP response code != 200');
-
-//     let json_response = await response.json();
-//     if(json_response.error == 1)
-//         throw new Error(json_response.message);
-//     console.log(json_response)
-//     renderTable(json_response["prediction"], filename)
-// }
-
 function cleanResults() {
-  const results = document.getElementById("result-section");
-  results.innerHTML = '';
+  if ($.fn.DataTable.isDataTable('#results-table')) {
+    $('#results-table').DataTable().destroy();
+    $("#results-table").html("");
+  }
+  
+  $("#results-section").addClass('display-non');
   $("#clean-button").addClass('display-non');
+
+  $("#result-thumbnails").html("");
+  $("#results-bar-plot").html("");
 }
 
 // table
-async function renderResultTable(response) {
-
-  let filename = "TODO: put filename here";
-
-  let json_response = await response.json();
-  console.log(json_response);
+async function renderResultsTable(response) {
+  let filename = $('#formFile').get(0).files[0].name;
   // example: {"prediction":[{"bank-statements":0.00405831029638648,"company-registry":0.0015687638660892844,"contracts":0.0006588833057321608,"court-documents":0.01585322991013527,"gazettes":0.016263607889413834,"invoices":0.00040692422771826386,"passport-scan":0.9983166456222534,"receipts":0.000726760714314878,"shipping-receipts":0.186161607503891,"__predicted":"passport-scan"},{"bank-statements":0.0030406122095882893,"company-registry":0.0047634076327085495,"contracts":0.0029574178624898195,"court-documents":0.021524254232645035,"gazettes":0.004118766635656357,"invoices":0.002362234750762582,"passport-scan":0.9994320273399353,"receipts":0.0008412563474848866,"shipping-receipts":0.01725003495812416,"__predicted":"passport-scan"}]}
   
-  if(json_response.error == 1) { 
-    throw new Error(json_response.message);
-  }
+  let data = response["prediction"];
 
-  let data = json_response["prediction"];
-  console.log(data)
-  // columns
-  var columns = [
-    "page",
-    "filename",
-    "predicted",
-    "bank-statements",
-    "company-registry",
-    "contracts",
-    "court-documents",
-    "gazettes",
-    "invoices",
-    "passport-scan",
-    "receipts",
-    "shipping-receipts"
-  ];
-
-  // CREATE DYNAMIC TABLE.
-  var table = document.createElement("table");
-  table.id = "table1"
-  // table.classList.add("table")
-
-  // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
-
-  var tr = table.insertRow(-1);   
-  // let myhead = mytable.createTHead();
-  var thead = document.createElement('thead');
-  table.insertBefore(thead, table.firstChild);
-  // .(newFirstElement, eElement.firstChild);
-
-  for (var i = 0; i < columns.length; i++) {
-      var th = document.createElement("th");      // TABLE HEADER.
-      th.innerHTML = columns[i];
-      tr.appendChild(th);
-  }
-  thead.appendChild(tr);
-
-  var tbody = table.getElementsByTagName('tbody')[0];
-
-  // ADD JSON DATA TO THE TABLE AS ROWS.
   for (var i = 0; i < data.length; i++) {
-
-      tr = tbody.insertRow(-1);
-
       var rowData = data[i];
-
-      
       rowData.filename = filename;
       rowData.page = i+1;
       rowData.predicted = rowData.__predicted;
-
-
-      for (var j = 0; j < columns.length; j++) {
-          var tabCell = tr.insertCell(-1);
-          var value = rowData[columns[j]];
-          if (["page","filename","predicted"].includes(columns[j])) {
-            tabCell.innerHTML = value;
-          }
-          else {
-            tabCell.innerHTML = value.toFixed(3);
-          }
-          
+      for (var j = 0; j < classes.length; j++) {
+        rowData[classes[j]] = parseFloat(rowData[classes[j]].toFixed(4))
       }
   }
 
-  // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
-  var divContainer = document.getElementById("result-table");
-  divContainer.innerHTML = "";
-  divContainer.appendChild(table);
-
-    $('#table1').DataTable({
+    let table = $('#results-table').DataTable({
+      data: data,
+      columns: [
+          { data: 'filename', title: 'filename',
+            render: function (data, type, full, meta) {
+                      return '<div class="text-break" style="width:150px;">' + data + "</div>";
+          }},
+          { data: 'page', title: 'page' },
+          { data: 'predicted', title: 'predicted'  },
+          { data: 'bank-statements', title: 'bank-statements' },
+          { data: 'company-registry', title: 'company-registry' },
+          { data: 'contracts', title: 'contracts' },
+          { data: 'court-documents', title: 'court-documents' },
+          { data: 'gazettes', title: 'gazettes' },
+          { data: 'invoices', title: 'invoices' },
+          { data: 'passport-scan', title: 'passport-scan' },
+          { data: 'receipts', title: 'receipts' },
+          { data: 'bank-statements', title: 'bank-statements' },
+          { data: 'shipping-receipts', title: 'shipping-receipts' }
+      ],
       dom: 'Bfrtip',
       buttons: [
           'copy', 'csv', 'excel'
       ],
       scrollX: true,
+      pageLength: 5
   });
+
+  const options = {
+    attributes: true
+  };
+
+  function callback(mutationList, observer) {
+    mutationList.forEach(function(mutation) {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+        table.columns.adjust().draw();
+      }
+    })
+  }
+  const observer = new MutationObserver(callback)
+  observer.observe(document.getElementById("v-pills-2"), options)
 }
