@@ -21,7 +21,7 @@ function predictFile() {
 
   return new Promise((resolve, reject) => {
 
-    let response = fetch('https://occrp-api-pbtmu45elq-uc.a.run.app/predict', {
+    let response = fetch('http://127.0.0.1:8000/predict', {
         method: 'POST',
         credentials: 'same-origin',
         body: data
@@ -36,15 +36,157 @@ function predictFile() {
   });
 }
 
+async function demo1(){
+  const demoData = {
+    "prediction": [
+      {
+        "bank-statements": 0.0002,
+        "company-registry": 0.0092,
+        "contracts": 0,
+        "court-documents": 0.9991,
+        "gazettes": 0.0012,
+        "invoices": 0.0001,
+        "passport-scan": 0.0001,
+        "receipts": 0.0006,
+        "shipping-receipts": 0.0001,
+        "filename": "23051660.b33bb18f0d6766bd5ba6953bd63dac7117e0abd3-23051660-1-2.pdf",
+        "page": 1,
+        "predicted": "court-documents"
+      },
+      {
+        "bank-statements": 0.0036,
+        "company-registry": 0.8191,
+        "contracts": 0.0254,
+        "court-documents": 0.3462,
+        "gazettes": 0.0004,
+        "invoices": 0,
+        "passport-scan": 0.0003,
+        "receipts": 0.0456,
+        "shipping-receipts": 0.0002,
+        "filename": "23051660.b33bb18f0d6766bd5ba6953bd63dac7117e0abd3-23051660-1-2.pdf",
+        "page": 2,
+        "predicted": "other"
+      }
+    ]
+  }
+    var a = await getImageDataURL("/assets/img/demo1/1.png");
+    var b = await getImageDataURL("/assets/img/demo1/2.png");
+    var thumbnails = [a, b];
+    showDemoData(demoData, thumbnails);
+  
+}
+
+async function demo2(){
+    var demoData = {
+      "prediction": [{
+        "bank-statements": 0.0038,
+        "company-registry": 0.0027,
+        "contracts": 0.0003,
+        "court-documents": 0.016,
+        "gazettes": 0.9999,
+        "invoices": 0.0002,
+        "passport-scan": 0.0029,
+        "receipts": 0.0037,
+        "shipping-receipts": 0.0166,
+        "__predicted": "gazettes",
+        "page": 1,
+        "predicted": "gazettes",
+        "filename": "23051660.b33bb18f0d6766bd5ba6953bd63dac7117e0abd3-23051660-1-2.pdf",
+      }]
+    } 
+    var a = await getImageDataURL("/assets/img/demo2/1.png");
+    var thumbnails = [a];
+    showDemoData(demoData, thumbnails); 
+}
+
+async function demo3(){
+  var demoData = {
+    "prediction": [
+      {
+        "bank-statements": 0.986,
+        "company-registry": 0.0011,
+        "contracts": 0.0004,
+        "court-documents": 0.0134,
+        "gazettes": 0.0176,
+        "invoices": 0.0019,
+        "passport-scan": 0.0528,
+        "receipts": 0.0099,
+        "shipping-receipts": 0.0012,
+        "__predicted": "bank-statements",
+        "page": 1,
+        "predicted": "bank-statements"
+      },
+      {
+        "bank-statements": 0.9698,
+        "company-registry": 0.0041,
+        "contracts": 0.0052,
+        "court-documents": 0.0133,
+        "gazettes": 0.0119,
+        "invoices": 0.0113,
+        "passport-scan": 0.0509,
+        "receipts": 0.0121,
+        "shipping-receipts": 0.0048,
+        "__predicted": "bank-statements",
+        "page": 2,
+        "predicted": "bank-statements"
+      },
+      {
+        "bank-statements": 0.4929,
+        "company-registry": 0.0109,
+        "contracts": 0.0524,
+        "court-documents": 0.0132,
+        "gazettes": 0.0197,
+        "invoices": 0.3905,
+        "passport-scan": 0.0655,
+        "receipts": 0.097,
+        "shipping-receipts": 0.0067,
+        "__predicted": "other",
+        "page": 3,
+        "predicted": "other"
+      },
+      {
+        "bank-statements": 0.9587,
+        "company-registry": 0.005,
+        "contracts": 0.0045,
+        "court-documents": 0.0141,
+        "gazettes": 0.0148,
+        "invoices": 0.0141,
+        "passport-scan": 0.0854,
+        "receipts": 0.0139,
+        "shipping-receipts": 0.0066,
+        "__predicted": "bank-statements",
+        "page": 4,
+        "predicted": "bank-statements"
+      }
+    ]
+  }
+  var a = await getImageDataURL("/assets/img/demo3/1.png");
+  var b = await getImageDataURL("/assets/img/demo3/2.png");
+  var c = await getImageDataURL("/assets/img/demo3/3.png");
+  var d = await getImageDataURL("/assets/img/demo3/4.png");
+  var thumbnails = [a, b, c, d];
+  showDemoData(demoData, thumbnails); 
+}
+
+
+async function showDemoData(demoData, thumbnails){
+  Promise.all([
+    renderResultsBar(demoData, thumbnails),
+    renderResultsTable(demoData)
+  ]).then(unhideResultsSection)
+}
+
+
 async function onResolved(response) {
   let json_response = await response.json();
 
   if(json_response.error == 1) { 
     throw new Error(json_response.message);
   }
+  var thumbnails = await pdfToThumbnails()
 
   Promise.all([
-    renderResultsBar(json_response),
+    renderResultsBar(json_response, thumbnails),
     renderResultsTable(json_response)
   ]).then(unhideResultsSection)
 }
@@ -69,25 +211,25 @@ function onRejected(error) {
   
   // some fake data with two pages
   // TODO comment this out!
-  var json_string = "{\"prediction\":[{\"bank-statements\":0.00405831029638648,\"company-registry\":0.0015687638660892844,\"contracts\":0.0006588833057321608,\"court-documents\":0.01585322991013527,\"gazettes\":0.016263607889413834,\"invoices\":0.00040692422771826386,\"passport-scan\":0.9983166456222534,\"receipts\":0.000726760714314878,\"shipping-receipts\":0.186161607503891,\"__predicted\":\"passport-scan\"},{\"bank-statements\":0.0030406122095882893,\"company-registry\":0.0047634076327085495,\"contracts\":0.0029574178624898195,\"court-documents\":0.021524254232645035,\"gazettes\":0.004118766635656357,\"invoices\":0.002362234750762582,\"passport-scan\":0.9994320273399353,\"receipts\":0.0008412563474848866,\"shipping-receipts\":0.01725003495812416,\"__predicted\":\"passport-scan\"}]}";
-  var json_to_response = new Response(json_string);
-  renderResultsBar(json_to_response);
+  // var json_string = "{\"prediction\":[{\"bank-statements\":0.00405831029638648,\"company-registry\":0.0015687638660892844,\"contracts\":0.0006588833057321608,\"court-documents\":0.01585322991013527,\"gazettes\":0.016263607889413834,\"invoices\":0.00040692422771826386,\"passport-scan\":0.9983166456222534,\"receipts\":0.000726760714314878,\"shipping-receipts\":0.186161607503891,\"__predicted\":\"passport-scan\"},{\"bank-statements\":0.0030406122095882893,\"company-registry\":0.0047634076327085495,\"contracts\":0.0029574178624898195,\"court-documents\":0.021524254232645035,\"gazettes\":0.004118766635656357,\"invoices\":0.002362234750762582,\"passport-scan\":0.9994320273399353,\"receipts\":0.0008412563474848866,\"shipping-receipts\":0.01725003495812416,\"__predicted\":\"passport-scan\"}]}";
+  // var json_to_response = new Response(json_string);
+  // renderResultsBar(json_to_response);
 
-  json_to_response = new Response(json_string);
-  renderResultsTable(json_to_response);
+  // json_to_response = new Response(json_string);
+  // renderResultsTable(json_to_response);
 }
 
 async function pdfToThumbnails() {
-    console.log("run pdfToThumbnailS");
+    // console.log("run pdfToThumbnailS");
     var thumbnails = []
     var thumbnail
     // var numPages = $('#formFile').get(0).files[i]; // for the moment, needs to be fixed
     var file = $('#formFile').get(0).files[0];
     var numPages = await getPageNumber(file);
     for (var i = 1; i < numPages + 1; ++i) {
-      console.log("time 1");
+      // console.log("time 1");
       thumbnail = await pdfToThumbnail(file, i);
-      console.log("time 3");
+      // console.log("time 3");
       thumbnails.push(thumbnail);
     }
     return (thumbnails);
@@ -136,7 +278,7 @@ async function pdfToThumbnail(file, page_number) {
           
           renderTask.promise.then(function () {
             var image_encoded = canvas.toDataURL();
-            console.log("time 2");
+            // console.log("time 2");
             resolve(image_encoded);
           });
         });
@@ -148,21 +290,46 @@ async function pdfToThumbnail(file, page_number) {
 }
 
 
+async function getImageDataURL(imageUrl) {
+  try {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
 
-async function renderResultsBar(response) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+// async function pdfToThumbnailsDemo1() {
+//   var a = await getImageDataURL("/assets/img/demo1/page1_test.png");
+//   var b = await getImageDataURL("/assets/img/demo1/page2_test.png");
+//   return [a, b];
+// }
+async function renderResultsBar(response, thumbnails) {
 
   // example: {"prediction":[{"bank-statements":0.00405831029638648,"company-registry":0.0015687638660892844,"contracts":0.0006588833057321608,"court-documents":0.01585322991013527,"gazettes":0.016263607889413834,"invoices":0.00040692422771826386,"passport-scan":0.9983166456222534,"receipts":0.000726760714314878,"shipping-receipts":0.186161607503891,"__predicted":"passport-scan"},{"bank-statements":0.0030406122095882893,"company-registry":0.0047634076327085495,"contracts":0.0029574178624898195,"court-documents":0.021524254232645035,"gazettes":0.004118766635656357,"invoices":0.002362234750762582,"passport-scan":0.9994320273399353,"receipts":0.0008412563474848866,"shipping-receipts":0.01725003495812416,"__predicted":"passport-scan"}]}
   // cleanResults()
-  thumbnails = await pdfToThumbnails()
-  
+  // console.log(thumbnails)
 
   let predictions = response["prediction"]
+  // console.log(predictions);
   for(let i = 0; i < predictions.length; i++) {
     let prediction = predictions[i];
 
 
-    let predicted_label = prediction["__predicted"]
-    delete prediction["__predicted"]
+    let predicted_label;
+    if (prediction["predicted"] == null) {
+      predicted_label = prediction["__predicted"]
+    } else {
+      predicted_label = prediction["predicted"]
+    }
+    // delete prediction["__predicted"]
 
     let page = "Page " + (i+1)
     let name = "results-thumbnail-" + i
@@ -233,16 +400,19 @@ function cleanResults() {
 
 // table
 async function renderResultsTable(response) {
-  let filename = $('#formFile').get(0).files[0].name;
+  // let filename = $('#formFile').get(0).files[0].name;
   // example: {"prediction":[{"bank-statements":0.00405831029638648,"company-registry":0.0015687638660892844,"contracts":0.0006588833057321608,"court-documents":0.01585322991013527,"gazettes":0.016263607889413834,"invoices":0.00040692422771826386,"passport-scan":0.9983166456222534,"receipts":0.000726760714314878,"shipping-receipts":0.186161607503891,"__predicted":"passport-scan"},{"bank-statements":0.0030406122095882893,"company-registry":0.0047634076327085495,"contracts":0.0029574178624898195,"court-documents":0.021524254232645035,"gazettes":0.004118766635656357,"invoices":0.002362234750762582,"passport-scan":0.9994320273399353,"receipts":0.0008412563474848866,"shipping-receipts":0.01725003495812416,"__predicted":"passport-scan"}]}
   
   let data = response["prediction"];
-
+  // console.log(data)
   for (var i = 0; i < data.length; i++) {
       var rowData = data[i];
-      rowData.filename = filename;
+      // rowData.filename = filename;
       rowData.page = i+1;
-      rowData.predicted = rowData.__predicted;
+      if (rowData.predicted == null) {
+        rowData.predicted = rowData.__predicted;
+      }
+      // rowData.predicted = rowData.__predicted;
       for (var j = 0; j < classes.length; j++) {
         rowData[classes[j]] = parseFloat(rowData[classes[j]].toFixed(4))
       }

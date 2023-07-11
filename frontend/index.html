@@ -41,12 +41,12 @@
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js" defer></script>
         <script src="js/scripts.js" defer></script>
         <script defer>
-            window.onload = function() {
-                document.querySelector("#formFile").addEventListener('change', () => {
-                    predictFile()
-                    .then(onResolved, onRejected)
-                });
-            }
+            // window.onload = function() {
+            //     document.querySelector("#formFile").addEventListener('change', () => {
+            //         predictFile()
+            //         .then(onResolved, onRejected)
+            //     });
+            // }
 
         </script>
     </head>
@@ -88,10 +88,12 @@
                             <form class="form-subscribe" id="contactForm" data-sb-form-api-token="API_TOKEN">
                                 <!-- Email address input-->
                                 <div class="row">
-                                    <div class="col">
-                                        <input class="form-control" type="file" id="formFile">
+                                    <div class="col"><button type="button" class="btn btn-primary" onclick="demo1()">Demo 1</button></div>
+                                    <div class="col"><button type="button" class="btn btn-warning" onclick="demo2()">Demo 2</button></div>
+                                    <div class="col"><button type="button" class="btn btn-danger" onclick="demo3()">Demo 3</button></div>
+                                        <!-- <input class="form-control" type="file" id="formFile"> -->
                                         <!-- <label for="formFile" class="form-label">Enter your file here</label> -->
-                                    </div>
+                                    
                                     <!-- <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Submit</button></div> -->
                                 </div>
                                 <!-- Submit success message-->
